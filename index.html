@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#eef4ef" />
+    <meta name="description" content="Ein freundlicher Tagesplan, der sich deinem Tempo anpasst." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Tagesanker" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icon-192.svg" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Tagesanker</title>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="Tagesanker Startseite">
+          <span class="brand-mark" aria-hidden="true">t</span>
+          <span>Tagesanker</span>
+        </a>
+        <div class="topbar-actions">
+          <button class="quiet-button" id="reminder-button" type="button" title="Erinnerung in 30 Minuten">
+            <span aria-hidden="true">◷</span>
+            <span class="button-label">Erinnerung</span>
+          </button>
+          <button class="quiet-button install-button" id="install-button" type="button" hidden title="App installieren">
+            <span aria-hidden="true">↓</span>
+            <span class="button-label">Installieren</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="welcome" id="top" aria-labelledby="welcome-title">
+        <div>
+          <p class="eyebrow" id="today-label"></p>
+          <h1 id="welcome-title">Heute, in deinem Tempo.</h1>
+          <p class="welcome-copy">Ein kleiner nächster Schritt reicht. Der Plan darf sich ändern.</p>
+        </div>
+        <div class="points-display" aria-live="polite">
+          <span class="points-spark" aria-hidden="true">✳</span>
+          <span><strong id="points-total">0</strong><small>Punkte gesammelt</small></span>
+        </div>
+      </section>
+
+      <div class="content-grid">
+        <section class="day-panel" aria-labelledby="plan-heading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Dein Überblick</p>
+              <h2 id="plan-heading">Tagesplan</h2>
+            </div>
+            <span class="progress-label" id="progress-label" aria-live="polite">0 von 0 erledigt</span>
+          </div>
+
+          <div class="progress-track" aria-hidden="true"><span id="progress-fill"></span></div>
+          <p class="progress-note" id="progress-note">Du kannst Aufgaben jederzeit anpassen.</p>
+
+          <div class="task-groups">
+            <section class="task-group" aria-labelledby="timed-heading">
+              <h3 id="timed-heading">Mit Zeit</h3>
+              <div id="timed-tasks" class="task-list"></div>
+            </section>
+            <section class="task-group flexible-group" aria-labelledby="flexible-heading">
+              <h3 id="flexible-heading">Wenn es passt <span>ohne feste Uhrzeit</span></h3>
+              <div id="flexible-tasks" class="task-list"></div>
+            </section>
+          </div>
+
+          <form class="add-task-form" id="task-form">
+            <label class="sr-only" for="task-title">Neue Aufgabe</label>
+            <input id="task-title" name="title" maxlength="100" placeholder="Was wäre heute hilfreich?" required />
+            <label class="sr-only" for="task-time">Uhrzeit, optional</label>
+            <input id="task-time" name="time" type="time" aria-label="Uhrzeit, optional" />
+            <button class="add-button" type="submit" aria-label="Aufgabe hinzufügen" title="Aufgabe hinzufügen">+</button>
+          </form>
+        </section>
+
+        <aside class="support-column" aria-label="Unterstützung">
+          <section class="tip-panel" aria-labelledby="tip-heading">
+            <div class="panel-topline"><span class="tip-icon" aria-hidden="true">✳</span><p class="eyebrow">Ein Gedanke für heute</p></div>
+            <h2 id="tip-heading">Klein anfangen zählt.</h2>
+            <p id="tip-copy">Mach den ersten Schritt so klein, dass du ihn auch an einem zähen Tag schaffen kannst.</p>
+            <button id="new-tip-button" class="text-button" type="button">Anderen Tipp ansehen <span aria-hidden="true">↗</span></button>
+          </section>
+
+          <section class="stuck-panel" aria-labelledby="stuck-heading">
+            <p class="eyebrow">Ohne Druck</p>
+            <h2 id="stuck-heading">Was macht es gerade schwer?</h2>
+            <div class="need-options" role="group" aria-label="Was macht es gerade schwer?">
+              <button class="need-option" type="button" data-need="overwhelmed">Zu viel auf einmal</button>
+              <button class="need-option" type="button" data-need="distracted">Ich bin abgelenkt</button>
+              <button class="need-option" type="button" data-need="tired">Wenig Energie</button>
+            </div>
+            <div class="support-response" id="support-response" aria-live="polite" hidden>
+              <p id="response-copy"></p>
+              <button id="two-minute-button" class="small-action" type="button">2-Minuten-Start</button>
+              <p class="timer" id="timer" aria-live="polite" hidden></p>
+            </div>
+            <button class="checkin-button" id="checkin-button" type="button" aria-pressed="false">
+              <span class="checkin-dot" aria-hidden="true"></span>
+              <span id="checkin-label">Ich ziehe mich gerade eher zurück</span>
+            </button>
+            <p class="checkin-feedback" id="checkin-feedback" aria-live="polite" hidden></p>
+          </section>
+        </aside>
+      </div>
+
+      <footer class="app-footer">
+        <span>Dein Plan gehört dir.</span>
+        <span id="storage-status">Auf diesem Gerät gespeichert</span>
+      </footer>
+      <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    </main>
+    <script src="app.js" defer></script>
+  </body>
+</html>
