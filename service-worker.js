@@ -1,5 +1,5 @@
-const CACHE_NAME = "tagesanker-v2";
-const APP_FILES = ["./", "index.html", "styles.css", "app.js", "manifest.webmanifest", "icon.svg", "icon-192.svg", "icon-512.svg"];
+const CACHE_NAME = "tagesanker-v6";
+const APP_FILES = ["./", "index.html", "styles.css", "app.js", "supabase-config.js", "supabase-sync.js", "manifest.webmanifest", "icon.svg", "icon-192.svg", "icon-512.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_FILES)));

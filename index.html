@@ -46,6 +46,29 @@
         </div>
       </section>
 
+      <section class="sync-panel" aria-labelledby="sync-heading">
+        <div class="sync-copy">
+          <p class="eyebrow">Deine Daten auf mehreren Geräten</p>
+          <h2 id="sync-heading">Synchronisierung</h2>
+          <p id="sync-status" aria-live="polite">Cloud-Sync ist noch nicht eingerichtet. Deine lokale Speicherung funktioniert weiter.</p>
+        </div>
+        <form class="auth-form" id="auth-form" hidden>
+          <label class="sr-only" for="auth-email">E-Mail-Adresse</label>
+          <input id="auth-email" name="email" type="email" autocomplete="email" placeholder="E-Mail-Adresse" required />
+          <label class="sr-only" for="auth-password">Passwort</label>
+          <input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="8" placeholder="Passwort, mindestens 8 Zeichen" required />
+          <div class="auth-actions">
+            <button class="small-action" id="sign-in-button" type="submit">Anmelden</button>
+            <button class="text-button" id="sign-up-button" type="button">Konto erstellen</button>
+          </div>
+        </form>
+        <div class="signed-in" id="signed-in" hidden>
+          <span>Angemeldet als <strong id="signed-in-email"></strong></span>
+          <button class="text-button" id="sync-now-button" type="button">Jetzt synchronisieren</button>
+          <button class="text-button" id="sign-out-button" type="button">Abmelden</button>
+        </div>
+      </section>
+
       <div class="content-grid">
         <section class="day-panel" aria-labelledby="plan-heading">
           <div class="section-heading">
@@ -115,6 +138,8 @@
       </footer>
       <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
     </main>
+    <script src="supabase-config.js" defer></script>
+    <script src="supabase-sync.js" defer></script>
     <script src="app.js" defer></script>
   </body>
 </html>

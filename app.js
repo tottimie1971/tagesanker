@@ -25,16 +25,21 @@ const toast = document.querySelector("#toast");
 function defaultState() {
   return {
     points: 0,
+    deletedTasks: [],
     tasks: [
-      { id: crypto.randomUUID(), date: todayKey, time: "09:00", title: "In Ruhe in den Tag starten", done: false, earned: false },
-      { id: crypto.randomUUID(), date: todayKey, time: "", title: "Eine Sache beginnen, die mir wichtig ist", done: false, earned: false }
+      { id: crypto.randomUUID(), date: todayKey, time: "09:00", title: "In Ruhe in den Tag starten", done: false, earned: false, updatedAt: 0 },
+      { id: crypto.randomUUID(), date: todayKey, time: "", title: "Eine Sache beginnen, die mir wichtig ist", done: false, earned: false, updatedAt: 0 }
     ]
   };
 }
 
 function normalizeState(saved) {
   if (!saved || !Array.isArray(saved.tasks)) return defaultState();
-  return { points: Number(saved.points) || 0, tasks: saved.tasks };
+  return {
+    points: Number(saved.points) || 0,
+    tasks: saved.tasks.map((task) => ({ ...task, updatedAt: Number(task.updatedAt) || 0 })),
+    deletedTasks: Array.isArray(saved.deletedTasks) ? saved.deletedTasks : []
+  };
 }
 
 function loadLegacyState() {
@@ -102,17 +107,24 @@ function updateStorageStatus() {
     : database ? "Auf diesem Gerät gespeichert" : "Im Browser gespeichert";
 }
 
-async function saveState() {
+async function saveLocalState() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch {
     document.querySelector("#storage-status").textContent = "Speichern derzeit nicht verfügbar";
-    return;
+    return false;
   }
   if (database) {
     try { await writeDatabaseState(); } catch { database = null; }
   }
   updateStorageStatus();
+  return true;
+}
+
+async function saveState() {
+  if (!await saveLocalState()) return;
+  window.TagesankerCloud?.markDirty();
+  if (window.TagesankerCloud?.isSignedIn()) await window.TagesankerCloud.sync();
 }
 
 function escapeHtml(text) {
@@ -166,7 +178,12 @@ function setTip(index) {
 
 dateLabel.textContent = new Intl.DateTimeFormat("de-DE", { weekday: "long", day: "numeric", month: "long" }).format(today);
 render();
-storageReady = initializeStorage();
+storageReady = initializeStorage().then(() => window.TagesankerCloud.initialize({
+  getState: () => state,
+  setState: (nextState) => { state = normalizeState(nextState); },
+  saveLocal: saveLocalState,
+  render
+}));
 
 document.querySelector("#task-form").addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -174,7 +191,7 @@ document.querySelector("#task-form").addEventListener("submit", async (event) =>
   const form = new FormData(event.currentTarget);
   const title = String(form.get("title") || "").trim();
   if (!title) return;
-  state.tasks.push({ id: crypto.randomUUID(), date: todayKey, time: String(form.get("time") || ""), title, done: false, earned: false });
+  state.tasks.push({ id: crypto.randomUUID(), date: todayKey, time: String(form.get("time") || ""), title, done: false, earned: false, updatedAt: Date.now() });
   await saveState();
   render();
   event.currentTarget.reset();
@@ -190,8 +207,10 @@ document.querySelector(".task-groups").addEventListener("click", async (event) =
   if (!task) return;
   if (button.dataset.action === "delete") {
     state.tasks = state.tasks.filter((item) => item.id !== task.id);
+    state.deletedTasks = [...state.deletedTasks.filter((deletion) => deletion.id !== task.id), { id: task.id, deletedAt: Date.now() }];
   } else {
     task.done = !task.done;
+    task.updatedAt = Date.now();
     if (task.done && !task.earned) {
       task.earned = true;
       state.points += 10;

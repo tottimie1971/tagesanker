@@ -56,6 +56,17 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .points-display strong { font-size: 20px; line-height: 1.1; }
 .points-display small { margin-top: 3px; color: #655323; font-size: 11px; }
 
+.sync-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 0.9fr); gap: 22px; align-items: center; margin-bottom: 22px; padding: 17px 20px; border: 1px solid var(--line); border-left: 4px solid var(--green); border-radius: 10px; background: #fff; }
+.sync-copy h2 { margin: 0 0 5px; font-family: Georgia, "Times New Roman", serif; font-size: 20px; font-weight: 500; }
+.sync-copy .eyebrow { margin-bottom: 5px; }
+.sync-copy > p:last-child { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.auth-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.auth-form input { width: 100%; min-width: 0; height: 40px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: #fbfcfa; color: var(--ink); font-size: 12px; }
+.auth-actions { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; }
+.signed-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 12px; color: var(--muted); font-size: 12px; }
+.signed-in strong { color: var(--ink); overflow-wrap: anywhere; }
+.sync-panel .text-button { min-height: 36px; }
+
 .content-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.9fr); gap: 22px; align-items: start; }
 .day-panel, .tip-panel, .stuck-panel { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow); }
 .day-panel { padding: 25px 27px 27px; }
@@ -128,6 +139,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   .points-display small { max-width: 70px; }
   .content-grid { grid-template-columns: 1fr; gap: 15px; }
   .support-column { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+  .sync-panel { grid-template-columns: 1fr; gap: 13px; }
+  .signed-in { justify-content: flex-start; }
 }
 @media (max-width: 520px) {
   .app-shell { width: calc(100% - 24px); }
@@ -147,5 +160,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   .add-task-form { grid-template-columns: 1fr 92px 40px; gap: 6px; }
   .add-task-form input { padding: 0 8px; font-size: 12px; }
   .support-column { grid-template-columns: 1fr; }
+  .sync-panel { padding: 16px; }
+  .auth-form { grid-template-columns: 1fr; }
+  .auth-actions { grid-column: auto; flex-wrap: wrap; }
   .app-footer { gap: 10px; font-size: 10px; }
 }
